@@ -10,109 +10,98 @@ master.iconbitmap(r'flashcard.ico')
 wordList = []
 definitionList = []
 
-global numOfTestClicks
-numOfTestClicks = 0
-
-global wordNum
 wordNum = 0
 
-
-def clearFunction(event):
+#Functions
+def clearFunction(event = 0):
     word.delete(0, END)  # Clears from the first value to the last one
     definition.delete(0, END)
 
-
-def clearForSubmitFunction():
-    word.delete(0, END)
-    definition.delete(0, END)
-
-
-def submitFunction(event):
+def submitFunction(event = 0):
     wordList.append(word.get())
     definitionList.append(definition.get())
-    clearForSubmitFunction()
+    clearFunction()
 
-
-def testFunction(event):
-    global wordNum
-    testWordLabel.config(text=wordList[wordNum])
-    testDefinitionLabel.config(text=definitionList[wordNum])
-    global numOfTestClicks
-    if (numOfTestClicks == 0):
+def testFunction(event = 0, wordNum = wordNum):
+    try:
+        testWordLabel.config(text=wordList[wordNum])
+        testDefinitionLabel.config(text=definitionList[wordNum])
         showDefinitionforTest()
-    numOfTestClicks += 1
-    wordNum += 1
-    nextButton.place(x=125, y=200)
-    test.place_forget()
+        nextButton.place(x=125, y=200)
+        test.place_forget()
+    except IndexError:
+        popUpBox("You need to add words before you test!")
 
-
-def hideDefinition(event):
+def hideDefinition(event = 0):
     testDefinitionLabel.place_forget()
     hideDefinitionButton.place_forget()
     showDefinitionButton.place(x=10, y=200)
 
-
-def showDefintion(event):
+def showDefintion(event = 0):
     showDefinitionButton.place_forget()
     testDefinitionLabel.place(x=10, y=250)
     hideDefinitionButton.place(x=10, y=200)
 
-
-def showDefinitionforTest():
+def showDefinitionforTest(): #This is different from the one above it because this is for when the test button is clicked
     testWordLabel.place(x=10, y=150)
     showDefinitionButton.place(x=10, y=200)
 
+def nextButtonFunction(event = 0, wordNum = wordNum):
+    try:
+        testWordLabel.config(text=wordList[wordNum])
+        testDefinitionLabel.config(text=definitionList[wordNum])
+        wordNum += 1
+        if (wordNum == len(wordList)):
+            wordNum = 0
+    except IndexError:
+        popUpBox(message="You must add another\n word and definition")
 
-def nextButtonFunction(event):
-    global wordNum
-    testWordLabel.config(text=wordList[wordNum])
-    testDefinitionLabel.config(text=definitionList[wordNum])
-    wordNum += 1
-    if (wordNum == len(wordList)):
-        wordNum = 0
+def popUpBox(message = "An Error Occured!"):
+    popUp = Toplevel()
+    popUp.geometry("220x100")
+    popUp.title('')
+    warningMessage = Label(popUp, text=message, font=40)
+    warningMessage.place(x=5, y=5)
+    okButton = Button(popUp, text="OK", command = popUp.destroy)
+    okButton.place(x=90, y=70)
 
-#def deleteButtonFunction(event):
-
-
-direction = Label(master, text="Welcome to my Flashcard application.")
-direction.place(x=10, y=10)
+#Labels
+directionLabel = Label(master, text="Welcome to my Flashcard application.")
+directionLabel.place(x=10, y=10)
 
 wordLabel = Label(master, text="Word:")
 wordLabel.place(x=40, y=50)
 
-word = Entry(master)
-word.place(x=80, y=50)
+testWordLabel = Label(master)
+testDefinitionLabel = Label(master)
 
 definitionLabel = Label(master, text="Definition:")
 definitionLabel.place(x=17.3, y=75)  # X is a weird number so that the ends of WordLabel and Definition label are equal
 
-definition = Entry(master)
-definition.place(x=80, y=75)
+#Entries
+definitionEntry = Entry(master)
+definitionEntry.place(x=80, y=75)
 
-submit = Button(master, text="Submit")
-submit.bind('<Button-1>', submitFunction)
-submit.bind('<Return>', submitFunction)
+word = Entry(master)
+word.place(x=80, y=50)
+
+#Buttons
+submit = Button(master, text="Submit", command = submitFunction)
 submit.place(x=35, y=100)
 
-clear = Button(master, text="Clear")
-clear.bind('<Button-1>', clearFunction)
+clear = Button(master, text="Clear", command = clearFunction)
 clear.place(x=95, y=100)
 
-test = Button(master, text="Test")
-test.bind('<Button-1>', testFunction)
+test = Button(master, text="Test", command = testFunction)
 test.place(x=150, y=100)
 
-testWordLabel = Label(master, text="W")
+hideDefinitionButton = Button(master, text="Hide Definition", command = hideDefinition)
 
-testDefinitionLabel = Label(master, text='D')
+showDefinitionButton = Button(master, text="Show Definition", command = showDefintion)
 
-hideDefinitionButton = Button(master, text="Hide Definition")
-hideDefinitionButton.bind('<Button-1>', hideDefinition)
+nextButton = Button(master, text="Next Word", command = nextButtonFunction)
 
-showDefinitionButton = Button(master, text="Show Definition")
-showDefinitionButton.bind('<Button-1>', showDefintion)
 
-nextButton = Button(master, text="Next Word")
-nextButton.bind('<Button-1>', nextButtonFunction)
+
 
 master.mainloop()
