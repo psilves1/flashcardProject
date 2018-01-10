@@ -1,9 +1,9 @@
-# Beta Development v1.1
+# Beta Development v2.0
 
 from tkinter import *
 
 master = Tk()
-master.title('Flashcard Beta Development V1.1')
+master.title('Flashcard Beta Development V2.0')
 master.geometry("500x400")
 master.iconbitmap(r'flashcard.ico')
 
@@ -86,7 +86,6 @@ def deleteButtonFunction():
         testFunction() #This function updates the label to the item that took the deleted item's place in the list
     else:
         popUpBox("You cannot delete that!")
-
 
 
 
